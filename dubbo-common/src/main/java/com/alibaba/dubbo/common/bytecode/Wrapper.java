@@ -106,6 +106,8 @@ public abstract class Wrapper {
      *
      * @param c Class instance. 指定类
      * @return Wrapper instance(not null). Wrapper 对象
+     * https://www.jianshu.com/p/57d53ff17062
+     * 生成包装类,重写了反射机制,通过方法名参数调用方法,效率接近原生
      */
     public static Wrapper getWrapper(Class<?> c) {
         // 判断是否继承 ClassGenerator.DC.class ，如果是，拿到父类，避免重复包装

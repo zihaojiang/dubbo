@@ -692,6 +692,8 @@ public class ExtensionLoader<T> {
 
     /**
      * 创建拓展名的拓展对象，并缓存。
+     * ioc 注入需求参数
+     * aop 包装Wrapper
      *
      * @param name 拓展名
      * @return 拓展对象
@@ -888,8 +890,9 @@ public class ExtensionLoader<T> {
                                                 }
                                             } else {
                                                 // 缓存拓展 Wrapper 实现类到 `cachedWrapperClasses`
+                                                //实现类构造函数有参数且为spi本类型代表就是Wrapper，本身持有本spi实现
                                                 try {
-                                                    clazz.getConstructor(type);
+                                                    clazz.getConstructor(type);//若无构造函数会抛出异常
                                                     Set<Class<?>> wrappers = cachedWrapperClasses;
                                                     if (wrappers == null) {
                                                         cachedWrapperClasses = new ConcurrentHashSet<Class<?>>();
