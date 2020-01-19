@@ -185,6 +185,7 @@ public class RegistryProtocol implements Protocol {
      * 暴露服务。
      *
      * 此处的 Local 指的是，本地启动服务，但是不包括向注册中心注册服务的意思。
+     * 调用 dubbo.export,启动本地netty
      *
      * @param originInvoker 原始 Invoker
      * @param <T> 泛型
@@ -383,6 +384,7 @@ public class RegistryProtocol implements Protocol {
                         + "," + Constants.ROUTERS_CATEGORY));
 
         // 创建 Invoker 对象
+        //将多个提供者引用，通过 Cluster 扩展点，伪装成单个提供者引用返回
         Invoker invoker = cluster.join(directory);
         // 向本地注册表，注册消费者
         ProviderConsumerRegTable.registerConsumer(invoker, url, subscribeUrl, directory);

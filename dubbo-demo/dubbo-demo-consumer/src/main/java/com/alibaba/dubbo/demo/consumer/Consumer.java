@@ -47,10 +47,10 @@ public class Consumer {
 //                ((EchoService) demoService).$echo("test4u");
 
                 String world = demoService.sayHello("world");
-                System.out.println("收到回复"+world);
+                System.out.println("response: "+world);
 //                ProtocolConfig.destroyAll();
 
-                Thread.sleep(1000);
+                Thread.sleep(100000);
 //                demoService.say02();
 //                demoService.say03();
 //                demoService.say04();

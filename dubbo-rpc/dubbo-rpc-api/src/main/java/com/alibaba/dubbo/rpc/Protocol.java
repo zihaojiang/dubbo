@@ -92,7 +92,7 @@ public interface Protocol {
      * @throws RpcException 当连接服务提供方失败时抛出
      */
     @Adaptive
-    <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException;
+    <T> Invoker<T>  refer(Class<T> type, URL url) throws RpcException;
 
     /**
      * Destroy protocol: <br>

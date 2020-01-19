@@ -530,6 +530,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
             // Cache key is url that does not merge with consumer side parameters, regardless of how the consumer combines parameters, if the server url changes, then refer again
             // 如果服务端 URL 发生变化，则重新 refer 引用
             Map<String, Invoker<T>> localUrlInvokerMap = this.urlInvokerMap; // local reference
+            //缓存每一个服务提供者的invoker,若存在多个注册中心会重复调用此方法
             Invoker<T> invoker = localUrlInvokerMap == null ? null : localUrlInvokerMap.get(key);
             if (invoker == null) { // Not in the cache, refer again 未在缓存中，重新引用
                 try {

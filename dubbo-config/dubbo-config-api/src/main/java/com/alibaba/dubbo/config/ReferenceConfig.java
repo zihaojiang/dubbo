@@ -504,15 +504,18 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
             }
 
             // 单 `urls` 时，引用服务，返回 Invoker 对象
+            //可能是dubbo协议也可能是registry协议,正常为registry
             if (urls.size() == 1) {
                 // 引用服务
-                invoker = refprotocol.refer(interfaceClass, urls.get(0));
+                invoker = refprotocol.refer(interfaceClass, urls.get(0));// 多个注册中心或多个服务提供者，或者两者混合
             } else {
+                // 多个注册中心或多个服务提供者，或者两者混合
                 // 循环 `urls` ，引用服务，返回 Invoker 对象
                 List<Invoker<?>> invokers = new ArrayList<Invoker<?>>();
                 URL registryURL = null;
                 for (URL url : urls) {
                     // 引用服务
+                    //若为registry协议则返回注册中心下所有提供者通过cluster合并的Invoker
                     invokers.add(refprotocol.refer(interfaceClass, url));
                     // 使用最后一个注册中心的 URL
                     if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {
@@ -524,6 +527,8 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                     // 对有注册中心的 Cluster 只用 AvailableCluster
                     // use AvailableCluster only when register's cluster is available
                     URL u = registryURL.addParameter(Constants.CLUSTER_KEY, AvailableCluster.NAME);
+                    //将多个提供者引用，通过 Cluster 扩展点，伪装成单个提供者引用返回
+                    //将每个注册中心的provider再合并一次??,正常来讲都是一样的,去重在哪里?
                     invoker = cluster.join(new StaticDirectory(u, invokers));
                 // 无注册中心，全部都是服务直连
                 } else { // not a registry url
