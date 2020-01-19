@@ -33,6 +33,7 @@ limitations under the License.
     <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
     <!--<dubbo:registry address="zookeeper://127.0.0.1:2181||10.20.153.11:2181,10.20.153.12:2181"/>-->
     <dubbo:registry address="zookeeper://127.0.0.1:2181"  />
+    <dubbo:registry address="zookeeper://127.0.0.1:2182"  />
     <!--<dubbo:registry address="redis://127.0.0.1:6379" />-->
 
 
