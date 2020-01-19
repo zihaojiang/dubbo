@@ -39,6 +39,7 @@ public interface Cluster {
      * Merge the directory invokers to a virtual invoker.
      *
      * 基于 Directory ，创建 Invoker 对象，实现统一、透明的 Invoker 调用过程
+     * 将 Directory 中的多个 Invoker 伪装成一个 Invoker，对上层透明，伪装过程包含了容错逻辑，调用失败后，重试另一个
      *
      * @param directory Directory 对象
      * @param <T>  泛型

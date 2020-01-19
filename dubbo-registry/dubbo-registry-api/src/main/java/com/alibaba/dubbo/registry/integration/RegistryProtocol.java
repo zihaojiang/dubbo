@@ -364,6 +364,7 @@ public class RegistryProtocol implements Protocol {
      */
     private <T> Invoker<T> doRefer(Cluster cluster, Registry registry, Class<T> type, URL url) {
         // 创建 RegistryDirectory 对象，并设置注册中心
+        // RegistryDirectory会监听注册中心,服务提供者变动会刷新本地Invoker
         RegistryDirectory<T> directory = new RegistryDirectory<T>(type, url);
         directory.setRegistry(registry);
         directory.setProtocol(protocol);
@@ -378,13 +379,14 @@ public class RegistryProtocol implements Protocol {
                     Constants.CHECK_KEY, String.valueOf(false))); // 不检查的原因是，不需要检查。
         }
         // 向注册中心订阅服务提供者 + 路由规则 + 配置规则
+        // 实例化本地invoker列表 (调用dubboProtocol.refer)
         directory.subscribe(subscribeUrl.addParameter(Constants.CATEGORY_KEY,
                         Constants.PROVIDERS_CATEGORY
                         + "," + Constants.CONFIGURATORS_CATEGORY
                         + "," + Constants.ROUTERS_CATEGORY));
 
         // 创建 Invoker 对象
-        //将多个提供者引用，通过 Cluster 扩展点，伪装成单个提供者引用返回
+        //将多个提供者引用，通过 Cluster 扩展点，伪装成单个提供者引用返回  默认为 FailoverCluster
         Invoker invoker = cluster.join(directory);
         // 向本地注册表，注册消费者
         ProviderConsumerRegTable.registerConsumer(invoker, url, subscribeUrl, directory);

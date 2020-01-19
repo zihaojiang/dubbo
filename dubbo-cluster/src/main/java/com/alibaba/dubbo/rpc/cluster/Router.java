@@ -48,6 +48,7 @@ public interface Router extends Comparable<Router> {
      * route.
      *
      * 路由，筛选匹配的 Invoker 集合
+     * 负责从多个 Invoker 中按路由规则选出子集，比如读写分离，应用隔离等
      *
      * @param invokers   Invoker 集合
      * @param url        refer url

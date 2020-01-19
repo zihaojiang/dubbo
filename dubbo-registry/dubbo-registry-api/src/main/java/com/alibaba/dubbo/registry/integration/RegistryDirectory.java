@@ -476,6 +476,11 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
      * Turn urls into invokers, and if url has been refer, will not re-reference.
      *
      * 将服务提供者 URL 集合，转成 Invoker 集合。若该服务提供者 URL 已经转换，则直接复用，不重新引用。
+     * toInvokers 方法一开始会对服务提供者 url 进行检测，若服务消费端的配置不支持服务端的协议，
+     * 或服务端 url 协议头为 empty 时，toInvokers 均会忽略服务提供方 url。必要的检测做完后，
+     * 紧接着是合并 url，然后访问缓存，尝试获取与 url 对应的 invoker。如果缓存命中，
+     * 直接将 Invoker 存入 newUrlInvokerMap 中即可。
+     * 如果未命中，则需要新建 Invoker。Invoker 是通过 Protocol 的 refer 方法创建的
      *
      * @param urls URL 集合
      * @return invokers
@@ -635,6 +640,10 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
      */
     /**
      * 将invokers列表转成与方法的映射关系
+     * 方法主要做了三件事情，
+     * 第一是对入参进行遍历，然后获取 methods 参数，并切分成数组。随后以方法名为键，Invoker 列表为值，将映射关系存储到 newMethodInvokerMap 中。
+     * 第二是分别基于类和方法对 Invoker 列表进行路由操作。
+     * 第三是对 Invoker 列表进行排序，并转成不可变列表。
      *
      * @param invokersMap Invoker列表
      * @return Invoker与方法的映射关系
@@ -777,7 +786,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
         }
         List<Invoker<T>> invokers = null;
         Map<String, List<Invoker<T>>> localMethodInvokerMap = this.methodInvokerMap; // local reference
-        // 获得 Invoker 集合
+        // 获得 Invoker 本地缓存
         if (localMethodInvokerMap != null && localMethodInvokerMap.size() > 0) {
             // 获得方法名、方法参数
             String methodName = RpcUtils.getMethodName(invocation);

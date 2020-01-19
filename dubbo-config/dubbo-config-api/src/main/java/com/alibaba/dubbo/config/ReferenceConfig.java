@@ -528,7 +528,8 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                     // use AvailableCluster only when register's cluster is available
                     URL u = registryURL.addParameter(Constants.CLUSTER_KEY, AvailableCluster.NAME);
                     //将多个提供者引用，通过 Cluster 扩展点，伪装成单个提供者引用返回
-                    //将每个注册中心的provider再合并一次??,正常来讲都是一样的,去重在哪里?
+                    // 根据上一句可知是AvailableCluster
+                    //多个注册中心,调用时会路由两次 默认第一次为AvailableCluster选择注册中心第二此为FailoverCluster选择具体服务提供者
                     invoker = cluster.join(new StaticDirectory(u, invokers));
                 // 无注册中心，全部都是服务直连
                 } else { // not a registry url
