@@ -642,7 +642,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                         // 创建 DelegateProviderMetaDataInvoker 对象
                         DelegateProviderMetaDataInvoker wrapperInvoker = new DelegateProviderMetaDataInvoker(invoker, this);
 
-                        // 使用 Protocol 暴露 Invoker 对象
+                        // 使用 Protocol 暴露 Invoker 对象'
+                        //一般会调用 registry 导出
                         Exporter<?> exporter = protocol.export(wrapperInvoker);
                         // 添加到 `exporters`
                         exporters.add(exporter);

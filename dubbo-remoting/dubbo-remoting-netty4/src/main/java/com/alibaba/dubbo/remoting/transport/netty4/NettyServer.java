@@ -80,7 +80,9 @@ public class NettyServer extends AbstractServer implements Server {
         bootstrap = new ServerBootstrap();
 
         // 创建线程组
+        // boss线程池，负责和消费者建立新的连接
         bossGroup = new NioEventLoopGroup(1, new DefaultThreadFactory("NettyServerBoss", true));
+        // worker线程池，负责连接的数据交换
         workerGroup = new NioEventLoopGroup(getUrl().getPositiveParameter(Constants.IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
                 new DefaultThreadFactory("NettyServerWorker", true));
 
