@@ -713,9 +713,9 @@ public class ExtensionLoader<T> {
                 EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
                 instance = (T) EXTENSION_INSTANCES.get(clazz);
             }
-            // 注入依赖的属性
+            // 注入依赖的属性 IOC
             injectExtension(instance);
-            // 创建 Wrapper 拓展对象
+            // 创建 Wrapper 拓展对象 AOP
             Set<Class<?>> wrapperClasses = cachedWrapperClasses;
             if (wrapperClasses != null && !wrapperClasses.isEmpty()) {
                 for (Class<?> wrapperClass : wrapperClasses) {
